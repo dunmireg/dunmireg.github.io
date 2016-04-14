@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Charter Schools in DC</title>
+  <link rel="stylesheet" href="/leaflet/leaflet.css">
+</head>
+<body>
+  <div id="mymap" style="height: 500px;"></div>
+  <script src="leaflet/leaflet.js"></script>
+  <script src="charters.js"></script>
+  <script>
+  //From example code Anna provided
+
+  //The goal here is to illustrate how the charter schools in Washngton DC
+  //seem to be clustered primarily in the East and Southeast of the City
+  
+  var themap = L.map('mymap').setView([38.8951, -77.0364],12);
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.light',
+    accessToken: 'pk.eyJ1IjoiZHVubWlyZWciLCJhIjoiY2ltem42cHFhMDR3dXdrbHVjd24ydGFiaiJ9.Anu2mxs_P3_M9xzVrlcVNw'
+  }).addTo(themap)
+
+  //credit to Ben Balter https://github.com/benbalter/dc-maps/blob/master/maps/charter-schools.geojson?short_path=4531219
+  //for providing the inspiration and data for this map
+  //L.geoJson(charters).addTo(themap);
+
+  //change icon to be a school
+  var schoolIcon = L.icon({
+    iconUrl: 'school.png',
+    iconSize: [20, 20]
+  });
+
+  //add to map
+  L.geoJson(charters, {
+    pointToLayer: function(feature, latlng) {
+      //return L.marker(latlng, {icon: schoolIcon});
+      //bind icon
+      var marker = L.marker(latlng, {icon: schoolIcon});
+      //add some popup
+      marker.bindPopup(feature.properties.NAME + '<br/>' + feature.properties.ADDRESS);
+      return marker;
+    }
+  }).addTo(themap);
+
+
+  </script>
+</body>
+</html>
